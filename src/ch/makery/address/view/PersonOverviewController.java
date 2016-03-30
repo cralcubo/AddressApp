@@ -2,7 +2,7 @@ package ch.makery.address.view;
 
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
-
+import ch.makery.address.util.DateUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -39,6 +39,18 @@ public class PersonOverviewController {
     private void initialize() {
     	firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getFirstName());
     	lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().getLastName());
+    	
+    	// Clear person details
+    	showPersonDetails(null);
+    	
+    	// Listen for selection changes
+    	personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> showPersonDetails(newVal));
+    }
+    
+    @FXML
+    private void handleDeletePerson() {
+    	int selIndex = personTable.getSelectionModel().getSelectedIndex();
+    	personTable.getItems().remove(selIndex);
     }
 	
     /**
@@ -50,6 +62,24 @@ public class PersonOverviewController {
     	this.mainApp = mainApp;
     	
     	personTable.setItems(mainApp.getPersonData());
+    }
+    
+    private void showPersonDetails(Person person) {
+    	if(person != null) {
+    		firstNameLabel.setText(person.getFirstName().getValue());
+    		lastNameLabel.setText(person.getLastName().getValue());
+    		streetLabel.setText(person.getStreet().getValue());
+    		postalCodeLabel.setText(String.valueOf(person.getPostalCode().getValue()));
+    		cityLabel.setText(person.getCity().getValue());
+    		birthdayLabel.setText(DateUtil.format(person.getBirthday().get()));
+    	} else {
+    		firstNameLabel.setText("");
+            lastNameLabel.setText("");
+            streetLabel.setText("");
+            postalCodeLabel.setText("");
+            cityLabel.setText("");
+            birthdayLabel.setText("");
+    	}
     }
 	
 	
