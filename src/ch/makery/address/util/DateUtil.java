@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
 	
-	private static final String DATE_PATTERN = "dd.MM.YYYY";
+	private static final String DATE_PATTERN = "dd.MM.yyyy";
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
 	
 	
@@ -24,5 +24,4 @@ public class DateUtil {
 	public static boolean validDate(String date) {
 		return DATE_FORMATTER.parse(date) != null;
 	}
-
 }

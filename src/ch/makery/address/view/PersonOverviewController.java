@@ -4,6 +4,8 @@ import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 import ch.makery.address.util.DateUtil;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -50,7 +52,45 @@ public class PersonOverviewController {
     @FXML
     private void handleDeletePerson() {
     	int selIndex = personTable.getSelectionModel().getSelectedIndex();
-    	personTable.getItems().remove(selIndex);
+    	if(selIndex > 0) {
+    		personTable.getItems().remove(selIndex);
+    	} else {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.initOwner(mainApp.getPrimaryStage());
+    		alert.setTitle("No Selection");
+    		alert.setHeaderText("No Person Selected");
+    		alert.setContentText("Please Select a Person to delete it.");
+    		alert.showAndWait();
+    	}
+    }
+    
+    @FXML
+    private void handleNewPerson() {
+    	Person p = new Person();
+    	boolean okClicked = mainApp.showPersonEditDialog(p);
+    	if(okClicked) {
+    		mainApp.getPersonData().add(p);
+    	}
+    }
+    
+    @FXML
+    private void handleEditPerson() {
+    	Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
+    	if(selectedPerson != null) {
+    		boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+    		if(okClicked) {
+    			showPersonDetails(selectedPerson);
+    		}
+    	} else {
+    		// Nothing selected.
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.initOwner(mainApp.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Person Selected");
+            alert.setContentText("Please select a person in the table.");
+
+            alert.showAndWait();
+    	}
     }
 	
     /**
@@ -81,7 +121,5 @@ public class PersonOverviewController {
             birthdayLabel.setText("");
     	}
     }
-	
-	
 
 }
